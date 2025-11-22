@@ -1,0 +1,31 @@
+module top(
+    input clk,
+    input btnC,
+    input [1:0] sw_mode,
+    input [7:0] sw_data,
+    output [7:0] led
+);
+
+wire mosi, miso;
+assign miso = mosi;  // loopback
+
+wire [7:0] rx_data;
+wire sclk, ss, done;
+
+spi_master SPI(
+    .clk(clk),
+    .reset(btnC),
+    .start(1'b1),
+    .mode(sw_mode),
+    .data_in(sw_data),
+    .data_out(rx_data),
+    .ss(ss),
+    .mosi(mosi),
+    .miso(miso),
+    .sclk(sclk),
+    .done(done)
+);
+
+assign led = rx_data;
+
+endmodule
